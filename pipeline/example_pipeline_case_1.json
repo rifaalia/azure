@@ -88,7 +88,11 @@
 				"outputs": [
 					{
 						"referenceName": "SQL_rifaalias",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "Ratings"
+						}
 					}
 				]
 			}
