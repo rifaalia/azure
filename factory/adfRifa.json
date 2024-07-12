@@ -1,0 +1,9 @@
+{
+	"name": "adfRifa",
+	"location": "southeastasia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "dfad27b8-8395-4a9c-9c0a-c70ad63ac71f",
+		"tenantId": "e522de87-3b5f-4914-b700-3ee0ac8e7497"
+	}
+}
