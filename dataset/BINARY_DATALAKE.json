@@ -16,6 +16,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "Day 3"
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {

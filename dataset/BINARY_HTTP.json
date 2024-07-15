@@ -5,6 +5,9 @@
 			"referenceName": "HTTP_",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Day 3"
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {

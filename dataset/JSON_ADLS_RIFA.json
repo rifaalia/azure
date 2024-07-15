@@ -1,8 +1,8 @@
 {
-	"name": "JSON_ADLS_celerates",
+	"name": "JSON_ADLS_RIFA",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ADLS_hanifstorage",
+			"referenceName": "ADLS_rifaalias",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
