@@ -138,7 +138,7 @@
 								"scripts": [
 									{
 										"type": "Query",
-										"text": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''failed', ''', GETDATE());')"
+										"text": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''failed', ''', GETDATE());')\n"
 									}
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
