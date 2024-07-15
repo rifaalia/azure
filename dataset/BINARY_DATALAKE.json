@@ -1,0 +1,30 @@
+{
+	"name": "BINARY_DATALAKE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLS_rifaalias",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"container_name": {
+				"type": "string"
+			},
+			"folder_name": {
+				"type": "string"
+			},
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "CustomerSource.csv",
+				"folderPath": "http_ingestion",
+				"fileSystem": "rifatest"
+			}
+		}
+	}
+}
