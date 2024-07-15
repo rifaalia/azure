@@ -1,0 +1,16 @@
+{
+	"name": "BINARY_HTTP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HTTP_",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		}
+	}
+}
