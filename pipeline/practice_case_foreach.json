@@ -82,7 +82,7 @@
 				}
 			},
 			{
-				"name": "ListLookup",
+				"name": "list_json_file",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -96,7 +96,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT \n    STRING_AGG(file_name,',') AS concatenated_files\nFROM list_json;",
+						"sqlReaderQuery": "SELECT \n    STRING_AGG(file_name,',') AS concatenated_files\nFROM list_json_file;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -115,7 +115,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "ListLookup",
+						"activity": "list_json_file",
 						"dependencyConditions": [
 							"Skipped"
 						]
