@@ -2,8 +2,15 @@
 	"name": "TR_document_ingestion",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
-		"pipelines": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "practice_case_foreach_insert_table",
+					"type": "PipelineReference"
+				}
+			}
+		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
@@ -13,11 +20,13 @@
 				"timeZone": "SE Asia Standard Time",
 				"schedule": {
 					"minutes": [
-						0
+						0,
+						14
 					],
 					"hours": [
 						9,
-						13
+						13,
+						15
 					]
 				}
 			}
