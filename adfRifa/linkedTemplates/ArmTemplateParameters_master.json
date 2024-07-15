@@ -1,0 +1,66 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfRifa"
+		},
+		"ADLS_rifaalias_accountKey": {
+			"value": ""
+		},
+		"MSI_password": {
+			"value": ""
+		},
+		"SQL_rifa_password": {
+			"value": ""
+		},
+		"ADLS_hanifstorage_accountKey": {
+			"value": ""
+		},
+		"Sql_hanif_data_password": {
+			"value": ""
+		},
+		"ADLS_rifaalias_properties_typeProperties_url": {
+			"value": "https://storageaccifa.dfs.core.windows.net/"
+		},
+		"HTTP__properties_typeProperties_url": {
+			"value": "https://solliancepublicdata.blob.core.windows.net/dataengineering/dp-203/awdata/CustomerSource.csv"
+		},
+		"MSI_properties_typeProperties_server": {
+			"value": "LAPTOP-L1HSQBFC"
+		},
+		"MSI_properties_typeProperties_database": {
+			"value": "AdventureWorks2022"
+		},
+		"MSI_properties_typeProperties_userName": {
+			"value": "etl"
+		},
+		"SQL_rifa_properties_typeProperties_server": {
+			"value": "rifaalias.database.windows.net"
+		},
+		"SQL_rifa_properties_typeProperties_database": {
+			"value": "data"
+		},
+		"SQL_rifa_properties_typeProperties_userName": {
+			"value": "rifaalias"
+		},
+		"ADLS_hanifstorage_properties_typeProperties_url": {
+			"value": "https://hanifstorageaccount.dfs.core.windows.net/"
+		},
+		"Sql_hanif_data_properties_typeProperties_server": {
+			"value": "mhaniffajari.database.windows.net"
+		},
+		"Sql_hanif_data_properties_typeProperties_database": {
+			"value": "data"
+		},
+		"Sql_hanif_data_properties_typeProperties_userName": {
+			"value": "admin_sa"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

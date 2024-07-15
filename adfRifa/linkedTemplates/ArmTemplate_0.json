@@ -1,0 +1,1253 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfRifa"
+		},
+		"ADLS_rifaalias_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS_rifaalias'"
+		},
+		"SQL_rifa_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SQL_rifa'"
+		},
+		"ADLS_hanifstorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS_hanifstorage'"
+		},
+		"Sql_hanif_data_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Sql_hanif_data'"
+		},
+		"MSI_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'MSI'"
+		},
+		"ADLS_rifaalias_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageaccifa.dfs.core.windows.net/"
+		},
+		"HTTP__properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://solliancepublicdata.blob.core.windows.net/dataengineering/dp-203/awdata/CustomerSource.csv"
+		},
+		"SQL_rifa_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "rifaalias.database.windows.net"
+		},
+		"SQL_rifa_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "data"
+		},
+		"SQL_rifa_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "rifaalias"
+		},
+		"ADLS_hanifstorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://hanifstorageaccount.dfs.core.windows.net/"
+		},
+		"Sql_hanif_data_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "mhaniffajari.database.windows.net"
+		},
+		"Sql_hanif_data_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "data"
+		},
+		"Sql_hanif_data_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admin_sa"
+		},
+		"MSI_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "LAPTOP-L1HSQBFC"
+		},
+		"MSI_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "AdventureWorks2022"
+		},
+		"MSI_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "etl"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_rifaalias')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLS_rifaalias_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLS_rifaalias_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HTTP_')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('HTTP__properties_typeProperties_url')]",
+					"enableServerCertificateValidation": false,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_rifa')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('SQL_rifa_properties_typeProperties_server')]",
+					"database": "[parameters('SQL_rifa_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('SQL_rifa_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SQL_rifa_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/localrifa')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_hanifstorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLS_hanifstorage_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLS_hanifstorage_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sql_hanif_data')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('Sql_hanif_data_properties_typeProperties_server')]",
+					"database": "[parameters('Sql_hanif_data_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('Sql_hanif_data_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Sql_hanif_data_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BINARY_HTTP')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HTTP_",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Day 3"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/HTTP_')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_ADLS_Rifa_MovieADLS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_rifaalias",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "moviesADLS.csv",
+						"folderPath": "practice",
+						"fileSystem": "rifatest"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "Rotton Tomato",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_rifaalias')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_ADLS_Rifa_Ratings')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_rifaalias",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "moviesADLS.csv",
+						"folderPath": "practice",
+						"fileSystem": "rifatest"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "Rotton Tomato",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_rifaalias')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_ADLS_rifaalias')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_rifaalias",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container_name": {
+						"type": "string",
+						"defaultValue": "rifatest"
+					},
+					"folder_name": {
+						"type": "string"
+					},
+					"file_name": {
+						"type": "string"
+					},
+					"delimiter_name": {
+						"type": "string",
+						"defaultValue": ","
+					},
+					"row_as_header": {
+						"type": "bool",
+						"defaultValue": true
+					}
+				},
+				"folder": {
+					"name": "ADLS"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().file_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().container_name",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": {
+						"value": "@dataset().delimiter_name",
+						"type": "Expression"
+					},
+					"escapeChar": "\\",
+					"firstRowAsHeader": {
+						"value": "@dataset().row_as_header",
+						"type": "Expression"
+					},
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_rifaalias')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_rifaalias')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SQL_rifa",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schema_name": {
+						"type": "string"
+					},
+					"table_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Database"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "CustomerKey",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "FirstName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MaritalStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Gender",
+						"type": "nvarchar"
+					},
+					{
+						"name": "YearlyIncome",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Education",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Occupation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StateProvince",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NumberOfOrders",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "TotalQuantity",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "TotalAmount",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					}
+				],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema_name",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SQL_rifa')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MSI')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('MSI_properties_typeProperties_server')]",
+					"database": "[parameters('MSI_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('MSI_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('MSI_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "localrifa",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/localrifa')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BINARY_DATALAKE')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_rifaalias",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container_name": {
+						"type": "string"
+					},
+					"folder_name": {
+						"type": "string"
+					},
+					"file_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Day 3"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "CustomerSource.csv",
+						"folderPath": "http_ingestion",
+						"fileSystem": "rifatest"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_rifaalias')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/JSON_ADLS_celerates')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_hanifstorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container_name": {
+						"type": "string"
+					},
+					"folder_name": {
+						"type": "string"
+					},
+					"file_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Day 4"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().file_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().container_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_hanifstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/JSON_ADLS_RIFA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_rifaalias",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container_name": {
+						"type": "string"
+					},
+					"folder_name": {
+						"type": "string"
+					},
+					"file_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Day 4"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().file_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().container_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_rifaalias')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sql_hanif')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Sql_hanif_data",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schema_name": {
+						"type": "string"
+					},
+					"table_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Database"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema_name",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Sql_hanif_data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/exampletest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL Server",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CSV_ADLS_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": "rifatest",
+									"folder_name": "cars",
+									"file_name": "cars.csv",
+									"delimiter_name": ";",
+									"row_as_header": true
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": "dbo",
+									"table_name": "cars"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FolderExample"
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-07-12T06:34:02Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CSV_ADLS_rifaalias')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_rifaalias')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_MSI')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MSI",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schema_name": {
+						"type": "string"
+					},
+					"table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema_name",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MSI')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/example_practice_case_1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CSV_ADLS_Rifa_MovieADLS",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CSV_ADLS_Rifa_MovieADLS",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "window1"
+						},
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          movie as string,",
+						"          title as string,",
+						"          genres as string,",
+						"          year as string,",
+						"          Rating as string,",
+						"          {Rotton Tomato} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          movie,",
+						"          title,",
+						"          genres,",
+						"          year,",
+						"          Rating,",
+						"          {Rotten Tomato} = {Rotton Tomato}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 filter(toInteger(year)>1950) ~> filter1",
+						"filter1 derive(primary = iif(locate('|', genres)>1, left(genres, locate('|', genres)-1), genres)) ~> derivedColumn1",
+						"derivedColumn1 window(over(primary,",
+						"          year),",
+						"     asc({Rotten Tomato}, true),",
+						"     RatingsRank = rank()) ~> window1",
+						"window1 aggregate(groupBy(year,",
+						"          primary),",
+						"     AverageRating = avg(toInteger({Rotten Tomato})),",
+						"          HighestRated = first(title),",
+						"          LowestRated = last(title),",
+						"          NumberOfMovies = count()) ~> aggregate1",
+						"aggregate1 alterRow(upsertIf(true())) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          movie as string,",
+						"          title as string,",
+						"          genres as string,",
+						"          year as string,",
+						"          Rating as string,",
+						"          {Rotton Tomato} as string",
+						"     ),",
+						"     partitionFileNames:['Ratings.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CSV_ADLS_Rifa_MovieADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/practice_case_dataflow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "HTTP to ADLS",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Skipped",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "BINARY_HTTP",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BINARY_DATALAKE",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": "rifatest",
+									"folder_name": "http_ingestion",
+									"file_name": "CustomerSource.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "Insert CSV to SQL",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Skipped",
+						"dependsOn": [
+							{
+								"activity": "HTTP to ADLS",
+								"dependencyConditions": [
+									"Skipped"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'CustomerSource' AND TABLE_SCHEMA = 'dbo')\nBEGIN\n    TRUNCATE TABLE dbo.CustomerSource;\nEND",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 1
+										},
+										"sink": {
+											"name": "CustomerID",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 2
+										},
+										"sink": {
+											"name": "Title",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 3
+										},
+										"sink": {
+											"name": "FirstName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 4
+										},
+										"sink": {
+											"name": "MiddleName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 5
+										},
+										"sink": {
+											"name": "LastName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 6
+										},
+										"sink": {
+											"name": "Suffix",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 7
+										},
+										"sink": {
+											"name": "CompanyName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 8
+										},
+										"sink": {
+											"name": "SalesPerson",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 9
+										},
+										"sink": {
+											"name": "EmailAddress",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 10
+										},
+										"sink": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CSV_ADLS_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": "rifatest",
+									"folder_name": "http_ingestion",
+									"file_name": "CustomerSource.csv",
+									"delimiter_name": "|",
+									"row_as_header": false
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": "dbo",
+									"table_name": "CustomerSource"
+								}
+							}
+						]
+					},
+					{
+						"name": "SCD Type 1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Insert CSV to SQL",
+								"dependencyConditions": [
+									"Skipped"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"additionalColumns": [
+									{
+										"name": "InsertedDate",
+										"value": {
+											"value": "@utcNow()",
+											"type": "Expression"
+										}
+									},
+									{
+										"name": "ModifiedDate",
+										"value": {
+											"value": "@utcNow()",
+											"type": "Expression"
+										}
+									}
+								],
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"CustomerID"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": "dbo",
+									"table_name": "CustomerSource"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": "dbo",
+									"table_name": "DimCustomer"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Day 3"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/BINARY_HTTP')]",
+				"[concat(variables('factoryId'), '/datasets/BINARY_DATALAKE')]",
+				"[concat(variables('factoryId'), '/datasets/CSV_ADLS_rifaalias')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_rifaalias')]"
+			]
+		}
+	]
+}

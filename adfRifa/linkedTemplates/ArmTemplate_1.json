@@ -1,0 +1,931 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfRifa"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/practice_case_dataflow_procedure')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "HTTP to ADLS",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "BINARY_HTTP",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BINARY_DATALAKE",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": "rifatest",
+									"folder_name": "http_ingestion",
+									"file_name": "CustomerSource.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "Insert CSV to SQL",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "HTTP to ADLS",
+								"dependencyConditions": [
+									"Skipped"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'CustomerSource' AND TABLE_SCHEMA = 'dbo')\nBEGIN\n    TRUNCATE TABLE dbo.CustomerSource;\nEND",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 1
+										},
+										"sink": {
+											"name": "CustomerID",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 2
+										},
+										"sink": {
+											"name": "Title",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 3
+										},
+										"sink": {
+											"name": "FirstName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 4
+										},
+										"sink": {
+											"name": "MiddleName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 5
+										},
+										"sink": {
+											"name": "LastName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 6
+										},
+										"sink": {
+											"name": "Suffix",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 7
+										},
+										"sink": {
+											"name": "CompanyName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 8
+										},
+										"sink": {
+											"name": "SalesPerson",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 9
+										},
+										"sink": {
+											"name": "EmailAddress",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 10
+										},
+										"sink": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CSV_ADLS_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": "rifatest",
+									"folder_name": "http_ingestion",
+									"file_name": "CustomerSource.csv",
+									"delimiter_name": "|",
+									"row_as_header": false
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": "dbo",
+									"table_name": "CustomerSource"
+								}
+							}
+						]
+					},
+					{
+						"name": "SCD_Type_1_Customer",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Insert CSV to SQL",
+								"dependencyConditions": [
+									"Skipped"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[SCD_Type_1_Customer]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SQL_rifa",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Day 3"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/practice_case_foreach')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "file name variable",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@split(replace(activity('list_json_file').output.firstRow.concatenated_files, '\\', ''), ',')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "transfer ADLS",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "JSON_ADLS_celerates",
+											"type": "DatasetReference",
+											"parameters": {
+												"container_name": "hanifcontainers",
+												"folder_name": "json_file",
+												"file_name": "@item()"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "JSON_ADLS_RIFA",
+											"type": "DatasetReference",
+											"parameters": {
+												"container_name": "rifatest",
+												"folder_name": "data",
+												"file_name": "@item()"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "list_json_file",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT \n    STRING_AGG(file_name,',') AS concatenated_files\nFROM list_json_file;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "sql_hanif",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": ".",
+									"table_name": "."
+								}
+							}
+						}
+					},
+					{
+						"name": "file name variable",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "list_json_file",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "File_Name",
+									"value": {
+										"type": "Expression",
+										"content": "@split(replace(activity('list_json_file').output.firstRow.concatenated_files, '\\', ''), ',')"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"file_name": {
+						"type": "Array",
+						"defaultValue": [
+							"documents.json",
+							"example_json.json"
+						]
+					}
+				},
+				"folder": {
+					"name": "Day 4"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/practice_case_foreach_insert_table')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "file name variable",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@split(replace(activity('list_json_file').output.firstRow.concatenated_files, '\\', ''), ',')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "transfer ADLS",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "JSON_ADLS_celerates",
+											"type": "DatasetReference",
+											"parameters": {
+												"container_name": "hanifcontainers",
+												"folder_name": "json_file",
+												"file_name": "@item()"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "JSON_ADLS_RIFA",
+											"type": "DatasetReference",
+											"parameters": {
+												"container_name": "rifatest",
+												"folder_name": "data",
+												"file_name": "@item()"
+											}
+										}
+									]
+								},
+								{
+									"name": "Success Log",
+									"type": "Script",
+									"dependsOn": [
+										{
+											"activity": "transfer ADLS",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "SQL_rifa",
+										"type": "LinkedServiceReference"
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "Query",
+												"text": {
+													"value": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''https://storageacchanif.blob.core.windows.net/development/json_file/', item(), ''', GETDATE());')",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								},
+								{
+									"name": "Failed Log",
+									"type": "Script",
+									"dependsOn": [
+										{
+											"activity": "transfer ADLS",
+											"dependencyConditions": [
+												"Failed"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "SQL_rifa",
+										"type": "LinkedServiceReference"
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "Query",
+												"text": {
+													"value": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''failed', ''', GETDATE());')\n",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "list_json_file",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT \n    STRING_AGG(file_name,',') AS concatenated_files\nFROM list_json;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "sql_hanif",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": ".",
+									"table_name": "."
+								}
+							}
+						}
+					},
+					{
+						"name": "file name variable",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "list_json_file",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "File_Name",
+									"value": {
+										"type": "Expression",
+										"content": "@split(replace(activity('list_json_file').output.firstRow.concatenated_files, '\\', ''), ',')"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"file_name": {
+						"type": "Array",
+						"defaultValue": [
+							"documents.json",
+							"example_json.json"
+						]
+					}
+				},
+				"folder": {
+					"name": "Day 4"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/example_local_to_ADLS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "sql_to_server",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_MSI",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": "HumanResources",
+									"table_name": "Department"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_ADLS_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": "rifatest",
+									"folder_name": "data",
+									"file_name": "Departement.csv",
+									"delimiter_name": ",",
+									"row_as_header": true
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FolderExample"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/example_pipeline_case_1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Extract and Transformation",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "example_practice_case_1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Load",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Extract and Transformation",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CSV_ADLS_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": "rifatest",
+									"folder_name": "practice",
+									"file_name": "Ratings.csv",
+									"delimiter_name": ",",
+									"row_as_header": true
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_rifaalias",
+								"type": "DatasetReference",
+								"parameters": {
+									"schema_name": "dbo",
+									"table_name": "Ratings"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FolderExample"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TR_document_ingestion')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "practice_case_foreach_insert_table",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2024-07-15T08:06:00",
+						"timeZone": "SE Asia Standard Time",
+						"schedule": {
+							"minutes": [
+								0,
+								14
+							],
+							"hours": [
+								9,
+								13,
+								15
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/practice_case_foreach_insert_table')]"
+			]
+		}
+	]
+}
