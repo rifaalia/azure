@@ -53,7 +53,7 @@
 									"referenceName": "JSON_ADLS_celerates",
 									"type": "DatasetReference",
 									"parameters": {
-										"container_name": "rifatest",
+										"container_name": "hanifcontainers",
 										"folder_name": "json_file",
 										"file_name": "@item()"
 									}
@@ -61,7 +61,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "JSON_ADLS_celerates",
+									"referenceName": "JSON_ADLS_RIFA",
 									"type": "DatasetReference",
 									"parameters": {
 										"container_name": "rifatest",
