@@ -1,0 +1,23 @@
+{
+	"name": "sql_hanif",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sql_hanif_data",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"schema_name": {
+				"type": "string"
+			},
+			"table_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Database"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
