@@ -98,14 +98,17 @@
 							},
 							"userProperties": [],
 							"linkedServiceName": {
-								"referenceName": "Sql_hanif_data",
+								"referenceName": "SQL_rifa",
 								"type": "LinkedServiceReference"
 							},
 							"typeProperties": {
 								"scripts": [
 									{
 										"type": "Query",
-										"text": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''https://storageacchanif.blob.core.windows.net/development/json_file/', item(), ''', GETDATE());')"
+										"text": {
+											"value": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''https://storageacchanif.blob.core.windows.net/development/json_file/', item(), ''', GETDATE());')",
+											"type": "Expression"
+										}
 									}
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
@@ -131,14 +134,17 @@
 							},
 							"userProperties": [],
 							"linkedServiceName": {
-								"referenceName": "Sql_hanif_data",
+								"referenceName": "SQL_rifa",
 								"type": "LinkedServiceReference"
 							},
 							"typeProperties": {
 								"scripts": [
 									{
 										"type": "Query",
-										"text": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''failed', ''', GETDATE());')\n"
+										"text": {
+											"value": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''failed', ''', GETDATE());')\n",
+											"type": "Expression"
+										}
 									}
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
