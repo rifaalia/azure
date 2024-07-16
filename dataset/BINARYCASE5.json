@@ -1,0 +1,27 @@
+{
+	"name": "BINARYCASE5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "GOOGLECLOUDCASE5",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"directory_name": {
+				"type": "string"
+			},
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "GoogleCloudStorageLocation",
+				"bucketName": "azure_data_engineer",
+				"folderPath": "image",
+				"fileName": "depends on list image"
+			}
+		}
+	}
+}
