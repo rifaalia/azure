@@ -218,9 +218,9 @@
 						]
 					},
 					{
-						"activity": "Order_items ",
+						"activity": "Order_items",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					}
 				],
