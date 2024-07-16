@@ -1,0 +1,24 @@
+{
+	"name": "SQLDATASETCASE5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLCASE5",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "CHALLENGE CASE5"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "image_name",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "list_image"
+		}
+	}
+}
