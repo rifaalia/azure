@@ -259,7 +259,7 @@
 					{
 						"activity": "Order_items",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
@@ -538,6 +538,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "FolderEndToEnd"
+		},
 		"annotations": []
 	}
 }
