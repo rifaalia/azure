@@ -19,8 +19,14 @@
 			"location": {
 				"type": "GoogleCloudStorageLocation",
 				"bucketName": "azure_data_engineer",
-				"folderPath": "image",
-				"fileName": "depends on list image"
+				"folderPath": {
+					"value": "@dataset().directory_name",
+					"type": "Expression"
+				},
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				}
 			}
 		}
 	}
