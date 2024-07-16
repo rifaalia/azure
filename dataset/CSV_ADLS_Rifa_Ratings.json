@@ -5,6 +5,9 @@
 			"referenceName": "ADLS_rifaalias",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "FolderExample"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
