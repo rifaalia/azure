@@ -117,7 +117,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"directory_name": "image",
-										"file_name": "@item()",
+										"file_name": "@concat(item(),'.png')",
 										"bucket_name": "azure_data_engineer"
 									}
 								}
