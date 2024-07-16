@@ -1,0 +1,17 @@
+{
+	"name": "MySqlDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MySql_google",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"table_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": []
+	}
+}
