@@ -75,6 +75,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@split(replace(activity('list_image_file').output.firstRow.concatenated_files, '\\', ''), ',')",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "Transfer ADLS",
