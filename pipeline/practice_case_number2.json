@@ -5,6 +5,8 @@
 			{
 				"name": "Application",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -66,6 +68,8 @@
 			{
 				"name": "Previous Application",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -127,6 +131,8 @@
 			{
 				"name": "Bureau",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -167,7 +173,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "public",
-							"table_name": "data"
+							"table_name": "bureau"
 						}
 					}
 				],
@@ -239,7 +245,7 @@
 						"parameters": {
 							"container_name": "rifatest",
 							"folder_name": "data",
-							"file_name": "installment .csv",
+							"file_name": "installment.csv",
 							"delimiter_name": ",",
 							"row_as_header": true
 						}
@@ -249,6 +255,8 @@
 			{
 				"name": "FactTable",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
