@@ -61,7 +61,7 @@
 						"parameters": {
 							"container_name": "rifatest",
 							"folder_name": {
-								"value": "@concat('data/customers/',formatDateTime(utcnow(), 'yyyy_MM_dd'))",
+								"value": "@concat('data/customers/',formatDateTime(utcNow(), 'yyyy_MM_dd'))",
 								"type": "Expression"
 							},
 							"file_name": "customers",

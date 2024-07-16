@@ -441,15 +441,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
+						"type": "PostgreSqlV2Source"
 					},
 					"sink": {
 						"type": "SqlServerSink",
@@ -474,18 +466,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "CSV_ADLS_rifaalias",
-						"type": "DatasetReference",
-						"parameters": {
-							"container_name": "rifatest",
-							"folder_name": {
-								"value": "@concat('data/applications/',formatDateTime(utcNow(), 'yyyy_MM_dd'))",
-								"type": "Expression"
-							},
-							"file_name": "application",
-							"delimiter_name": ",",
-							"row_as_header": true
-						}
+						"referenceName": "PostgreCaseNumber2",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
