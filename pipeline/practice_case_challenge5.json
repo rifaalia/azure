@@ -129,7 +129,7 @@
 									"parameters": {
 										"container_name": "rifatest",
 										"folder_name": "data",
-										"file_name": "@item()"
+										"file_name": "@concat(item(),'.png')"
 									}
 								}
 							]
