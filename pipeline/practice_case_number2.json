@@ -246,7 +246,7 @@
 							"container_name": "rifatest",
 							"folder_name": "data",
 							"file_name": "installment.csv",
-							"delimiter_name": ",",
+							"delimiter_name": ";",
 							"row_as_header": true
 						}
 					}
