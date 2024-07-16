@@ -66,8 +66,6 @@
 			{
 				"name": "Previous Application",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -129,8 +127,6 @@
 			{
 				"name": "Bureau",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -252,11 +248,34 @@
 				]
 			},
 			{
-				"name": "FactTable",
+				"name": "Fact Loan Model",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Application2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Previous Application2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Installment2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Bureau2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -271,7 +290,23 @@
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
@@ -282,14 +317,29 @@
 							"table_name": "."
 						}
 					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_rifaalias",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "view_fact_loan_model"
+						}
+					}
 				]
 			},
 			{
-				"name": "Copy data1",
+				"name": "Previous Application2",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Previous Application",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -312,7 +362,11 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": []
+						},
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
@@ -331,6 +385,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "rifatest",
+							"folder_name": "data",
+							"file_name": "previous_application.csv",
 							"delimiter_name": ",",
 							"row_as_header": true
 						}
@@ -339,16 +395,25 @@
 				"outputs": [
 					{
 						"referenceName": "SQL_rifaalias",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "previous_application"
+						}
 					}
 				]
 			},
 			{
-				"name": "Copy data1_copy1",
+				"name": "Installment2",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Installment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -371,7 +436,10 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true
+						},
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
@@ -390,6 +458,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "rifatest",
+							"folder_name": "data",
+							"file_name": "installment.csv",
 							"delimiter_name": ",",
 							"row_as_header": true
 						}
@@ -398,16 +468,25 @@
 				"outputs": [
 					{
 						"referenceName": "SQL_rifaalias",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "installment"
+						}
 					}
 				]
 			},
 			{
-				"name": "Copy data2",
+				"name": "Bureau2",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Bureau",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -417,8 +496,58 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_ADLS_rifaalias",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "rifatest",
+							"folder_name": "data",
+							"file_name": "bureau.csv",
+							"delimiter_name": ",",
+							"row_as_header": true
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_rifaalias",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "bureau"
+						}
+					}
+				]
 			},
 			{
 				"name": "Application2",
@@ -441,16 +570,22 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "PostgreSqlV2Source"
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
 					"sink": {
 						"type": "SqlServerSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
 							"useTempDB": true,
-							"keys": [
-								"customer_no"
-							]
+							"keys": []
 						},
 						"sqlWriterUseTableLock": false
 					},
@@ -466,8 +601,15 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "PostgreCaseNumber2",
-						"type": "DatasetReference"
+						"referenceName": "CSV_ADLS_rifaalias",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "rifatest",
+							"folder_name": "data",
+							"file_name": "application.csv",
+							"delimiter_name": ",",
+							"row_as_header": true
+						}
 					}
 				],
 				"outputs": [
