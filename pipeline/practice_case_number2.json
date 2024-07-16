@@ -5,8 +5,6 @@
 			{
 				"name": "Application",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -425,8 +423,6 @@
 			{
 				"name": "Application2",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Application",
@@ -444,8 +440,64 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"customer_no"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_ADLS_rifaalias",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "rifatest",
+							"folder_name": {
+								"value": "@concat('data/applications/',formatDateTime(utcNow(), 'yyyy_MM_dd'))",
+								"type": "Expression"
+							},
+							"file_name": "application",
+							"delimiter_name": ",",
+							"row_as_header": true
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_rifaalias",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "application"
+						}
+					}
+				]
 			}
 		],
 		"folder": {
