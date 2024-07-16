@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT \n    STRING_AGG(file_name,',') AS concatenated_files\nFROM list_image_file;",
+						"sqlReaderQuery": "SELECT \n    STRING_AGG(file_name,',') AS concatenated_files\nFROM list_image;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -117,7 +117,8 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"directory_name": "image",
-										"file_name": "@item()"
+										"file_name": "@item()",
+										"bucket_name": "azure_data_engineer"
 									}
 								}
 							],
