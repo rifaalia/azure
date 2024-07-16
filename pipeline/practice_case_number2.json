@@ -205,7 +205,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "PostgreSqlV2Source"
+						"type": "PostgreSqlV2Source",
+						"query": "select * from public.installment"
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
@@ -233,8 +234,8 @@
 						"referenceName": "PostgreCaseNumber2",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema_name": "public",
-							"table_name": "installment "
+							"schema_name": ".",
+							"table_name": ". "
 						}
 					}
 				],
@@ -246,7 +247,7 @@
 							"container_name": "rifatest",
 							"folder_name": "data",
 							"file_name": "installment.csv",
-							"delimiter_name": ";",
+							"delimiter_name": ",",
 							"row_as_header": true
 						}
 					}
@@ -402,6 +403,49 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Copy data2",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
+			},
+			{
+				"name": "Application2",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Application",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
 			}
 		],
 		"folder": {
