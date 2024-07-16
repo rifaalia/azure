@@ -1,0 +1,33 @@
+{
+	"name": "PostgreCaseNumber2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "POSTGRECASE5",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"schema_name": {
+				"type": "string"
+			},
+			"table_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "CHALLENGE CASE5"
+		},
+		"annotations": [],
+		"type": "PostgreSqlV2Table",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().schema_name",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().table_name",
+				"type": "Expression"
+			}
+		}
+	}
+}
