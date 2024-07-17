@@ -344,6 +344,8 @@
 			{
 				"name": "Previous Application2",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Previous Application",
@@ -476,7 +478,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "dbo",
-							"table_name": "installment"
+							"table_name": "installments"
 						}
 					}
 				]
@@ -484,6 +486,8 @@
 			{
 				"name": "Bureau2",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Bureau",
