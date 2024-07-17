@@ -305,7 +305,7 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"SK_ID_CURR,"
+								"SK_ID_CURR"
 							]
 						},
 						"sqlWriterUseTableLock": false
@@ -560,6 +560,8 @@
 			{
 				"name": "Application2",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Application",
