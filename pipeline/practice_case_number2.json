@@ -305,7 +305,7 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"customer_no"
+								"SK_ID_CURR"
 							]
 						},
 						"sqlWriterUseTableLock": false
