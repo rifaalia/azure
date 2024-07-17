@@ -369,7 +369,9 @@
 						"writeBehavior": "upsert",
 						"upsertSettings": {
 							"useTempDB": true,
-							"keys": []
+							"keys": [
+								"customer_no"
+							]
 						},
 						"sqlWriterUseTableLock": false
 					},
@@ -442,7 +444,10 @@
 						"type": "SqlServerSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
-							"useTempDB": true
+							"useTempDB": true,
+							"keys": [
+								"customer_no"
+							]
 						},
 						"sqlWriterUseTableLock": false
 					},
@@ -515,7 +520,10 @@
 						"type": "SqlServerSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
-							"useTempDB": true
+							"useTempDB": true,
+							"keys": [
+								"customer_no"
+							]
 						},
 						"sqlWriterUseTableLock": false
 					},
@@ -589,7 +597,9 @@
 						"writeBehavior": "upsert",
 						"upsertSettings": {
 							"useTempDB": true,
-							"keys": []
+							"keys": [
+								"customer_no"
+							]
 						},
 						"sqlWriterUseTableLock": false
 					},
