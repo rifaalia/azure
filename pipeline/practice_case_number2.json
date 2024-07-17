@@ -287,6 +287,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT * FROM view_loan_modeling;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -294,7 +295,10 @@
 						"type": "SqlServerSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
-							"useTempDB": true
+							"useTempDB": true,
+							"keys": [
+								"SK_ID_CURR,"
+							]
 						},
 						"sqlWriterUseTableLock": false
 					},
@@ -324,7 +328,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "dbo",
-							"table_name": "view_fact_loan_model"
+							"table_name": "loan_modeling"
 						}
 					}
 				]
