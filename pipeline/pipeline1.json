@@ -43,7 +43,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -72,10 +72,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_rifaalias",
+						"referenceName": "CSV_BLOB_RIFANEW",
 						"type": "DatasetReference",
 						"parameters": {
-							"container_name": "rifacontainer",
+							"container_name": "development",
 							"folder_name": {
 								"value": "@concat('raw/customers/', formatDateTime(utcnow(), 'yyyyMMdd'))",
 								"type": "Expression"
@@ -106,7 +106,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -135,10 +135,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_rifaalias",
+						"referenceName": "CSV_BLOB_RIFANEW",
 						"type": "DatasetReference",
 						"parameters": {
-							"container_name": "rifacontainer",
+							"container_name": "development",
 							"folder_name": {
 								"value": "@concat('raw/orders/', formatDateTime(utcnow(), 'yyyyMMdd'))",
 								"type": "Expression"
@@ -169,7 +169,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -198,10 +198,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_rifaalias",
+						"referenceName": "CSV_BLOB_RIFANEW",
 						"type": "DatasetReference",
 						"parameters": {
-							"container_name": "rifacontainer",
+							"container_name": "development",
 							"folder_name": {
 								"value": "@concat('raw/order_items/', formatDateTime(utcnow(), 'yyyyMMdd'))",
 								"type": "Expression"
@@ -212,6 +212,23 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Transform and load",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "DB_Kelompok5",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
