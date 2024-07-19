@@ -5,6 +5,8 @@
 			{
 				"name": "Notebook1",
 				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -41,7 +43,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -70,10 +72,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_RifaNew",
+						"referenceName": "CSV_ADLS_rifaalias",
 						"type": "DatasetReference",
 						"parameters": {
-							"container_name": "development",
+							"container_name": "rifacontainer",
 							"folder_name": {
 								"value": "@concat('raw/customers/', formatDateTime(utcnow(), 'yyyyMMdd'))",
 								"type": "Expression"
@@ -104,7 +106,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -133,10 +135,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_RifaNew",
+						"referenceName": "CSV_ADLS_rifaalias",
 						"type": "DatasetReference",
 						"parameters": {
-							"container_name": "development",
+							"container_name": "rifacontainer",
 							"folder_name": {
 								"value": "@concat('raw/orders/', formatDateTime(utcnow(), 'yyyyMMdd'))",
 								"type": "Expression"
@@ -167,7 +169,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -196,15 +198,15 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_RifaNew",
+						"referenceName": "CSV_ADLS_rifaalias",
 						"type": "DatasetReference",
 						"parameters": {
-							"container_name": "development",
+							"container_name": "rifacontainer",
 							"folder_name": {
 								"value": "@concat('raw/order_items/', formatDateTime(utcnow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
-							"file_name": "oreder_items.csv",
+							"file_name": "order_items.csv",
 							"delimiter_name": ",",
 							"row_as_header": true
 						}
