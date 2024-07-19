@@ -47,7 +47,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SQL_rifaalias",
+						"referenceName": "SQLSCDTASK",
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "dbo",
