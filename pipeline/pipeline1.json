@@ -41,7 +41,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -70,7 +70,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_rifaalias",
+						"referenceName": "CSV_ADLS_RifaNew",
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "development",
@@ -104,7 +104,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -133,7 +133,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_rifaalias",
+						"referenceName": "CSV_ADLS_RifaNew",
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "development",
@@ -167,7 +167,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -196,15 +196,15 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_rifaalias",
+						"referenceName": "CSV_ADLS_RifaNew",
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "development",
 							"folder_name": {
-								"value": "@concat('raw/ordre_items/', formatDateTime(utcnow(), 'yyyyMMdd'))",
+								"value": "@concat('raw/order_items/', formatDateTime(utcnow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
-							"file_name": "order_items.csv",
+							"file_name": "oreder_items.csv",
 							"delimiter_name": ",",
 							"row_as_header": true
 						}
