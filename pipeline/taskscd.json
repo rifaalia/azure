@@ -5,6 +5,8 @@
 			{
 				"name": "SCD1",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -18,7 +20,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "WITH LatestEmployee AS (\n    SELECT \n        EmployeeID,\n        Name,\n        Position,\n        StartDate,\n        EndDate,\n        ROW_NUMBER() OVER (PARTITION BY EmployeeID ORDER BY EndDate DESC) AS rn\n    FROM Employee\n)\n\nSELECT\n    EmployeeID,\n    Name,\n    Position,\n    StartDate,\n    EndDate\nFROM LatestEmployee\nWHERE rn = 1;",
+							"value": "WITH LatestEmployee AS (\n    SELECT \n        EmployeeID,\n        Name,\n        Position,\n        StartDate,\n        EndDate,\n        ROW_NUMBER() OVER (PARTITION BY EmployeeID ORDER BY EndDate DESC) AS rn\n    FROM Employee\n)\n\nSELECT\n    EmployeeID,\n    Name,\n    Position,\n    StartDate,\n    EndDate\nFROM LatestEmployee\nWHERE rn = 1;\n",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -61,7 +63,71 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "dbo",
-							"table_name": "User"
+							"table_name": "User_log"
+						}
+					}
+				]
+			},
+			{
+				"name": "SCD2",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "WITH LatestEmployee AS (\n    SELECT \n        EmployeeLogID,\n        EmployeeID,\n        Name,\n        Position,\n        StartDate,\n        EndDate,\n        ROW_NUMBER() OVER (PARTITION BY EmployeeID ORDER BY EndDate DESC) AS rn\n    FROM Employee\n)\n\nINSERT INTO dbo.User_log (EmployeeLogID, EmployeeID, Name, Position, StartDate, EndDate, isLatest)\nSELECT \n    EmployeeLogID,\n    EmployeeID,\n    Name,\n    Position,\n    StartDate,\n    EndDate,\n    CASE WHEN rn = 1 THEN 1 ELSE 0 END AS isLatest\nFROM LatestEmployee;",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"EmployeeLogID"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sql_hanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "Employee"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_rifaalias",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "User_log"
 						}
 					}
 				]
