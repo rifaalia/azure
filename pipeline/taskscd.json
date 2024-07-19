@@ -25,9 +25,7 @@
 						"writeBehavior": "upsert",
 						"upsertSettings": {
 							"useTempDB": true,
-							"keys": [
-								"EmployeeID"
-							]
+							"keys": []
 						},
 						"sqlWriterUseTableLock": false
 					},
