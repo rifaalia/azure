@@ -96,7 +96,7 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"EmployeeLogID"
+								"EmployeeID"
 							]
 						},
 						"sqlWriterUseTableLock": false
@@ -152,7 +152,13 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								""
+							]
+						},
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
@@ -180,7 +186,8 @@
 						"referenceName": "SQL_rifaalias",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema_name": "dbo"
+							"schema_name": "dbo",
+							"table_name": "User_historical"
 						}
 					}
 				]
