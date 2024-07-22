@@ -47,6 +47,33 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Copy data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/kelompok_4@chococwefdit.onmicrosoft.com/Rifa/Introduction to Microsoft Azure Databricks/challengecaseday9"
+				},
+				"linkedServiceName": {
+					"referenceName": "DATABRICKS_Kelompok4",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
