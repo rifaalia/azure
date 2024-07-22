@@ -20,14 +20,12 @@
 						"batchSize": 100
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "JsonSink",
 						"storeSettings": {
 							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
+							"type": "JsonWriteSettings"
 						}
 					},
 					"enableStaging": false
@@ -40,14 +38,12 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_BLOB_RIFANEW",
+						"referenceName": "JSON_dataset_New",
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "development",
-							"folder_name": "raw/documents",
-							"file_name": "documents.csv",
-							"delimiter_name": ",",
-							"row_as_header": true
+							"directory_name": "raw/docs",
+							"file_name": "docs.json"
 						}
 					}
 				]
