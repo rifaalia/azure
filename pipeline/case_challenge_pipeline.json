@@ -32,6 +32,12 @@
 					},
 					"enableStaging": false
 				},
+				"inputs": [
+					{
+						"referenceName": "MONGODB_Dataset",
+						"type": "DatasetReference"
+					}
+				],
 				"outputs": [
 					{
 						"referenceName": "CSV_BLOB_RIFANEW",
@@ -39,7 +45,10 @@
 						"parameters": {
 							"container_name": "development",
 							"folder_name": "case_test",
-							"file_name": "raw/",
+							"file_name": {
+								"value": "@concat('raw/', 'documents/', formatDateTime(utcnow(), 'yyyy-MM-dd'))",
+								"type": "Expression"
+							},
 							"delimiter_name": ",",
 							"row_as_header": true
 						}
