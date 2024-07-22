@@ -44,8 +44,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "development",
-							"folder_name": "raw/development",
-							"file_name": "development.csv",
+							"folder_name": "raw/documents",
+							"file_name": "documents.csv",
 							"delimiter_name": ",",
 							"row_as_header": true
 						}
