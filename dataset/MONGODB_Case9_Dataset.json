@@ -8,8 +8,11 @@
 		"parameters": {
 			"collection_name": {
 				"type": "string",
-				"defaultValue": "data"
+				"defaultValue": "documents"
 			}
+		},
+		"folder": {
+			"name": "ChallengeCaseDay9"
 		},
 		"annotations": [],
 		"type": "MongoDbV2Collection",
